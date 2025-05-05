@@ -18,6 +18,16 @@ async def start():
     cl.user_session.set("element", hello_world)
     await cl.Message(content="Please select the PDF files you want to upload", elements=[hello_world]).send()
 
+    selfie_component = cl.CustomElement(
+        name="selfieComponent",
+        props = {
+            "button_text": "Take a selfie"
+        }
+    )       
+
+    cl.user_session.set("element", selfie_component)
+    await cl.Message(content="Please select the PDF files you want to upload", elements=[selfie_component]).send()
+
 @cl.on_message
 async def handle(message: cl.Message):
     
