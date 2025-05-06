@@ -48,6 +48,15 @@ async def start():
     cl.user_session.set("element", hello_world)
     await cl.Message(content="Please select the PDF files you want to upload", elements=[hello_world]).send()
 
+    calendar_component = cl.CustomElement(
+        name="calendarComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", calendar_component)
+    await cl.Message(content="Calendar", elements=[calendar_component]).send()    
 
 
     settings = await cl.ChatSettings(

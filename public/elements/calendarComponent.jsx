@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 
+// Import custom CSS
 const chevronLeft = (
     <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
 );
@@ -92,21 +92,21 @@ export default function CalendarComponent() {
     const calendarGrid = getCalendarGrid();
 
     return (
-        <Card className="p-6 w-[340px] rounded-2xl shadow-lg bg-white">
-            <div className="flex items-center justify-between mb-4">
-                <button onClick={handlePrevMonth} className="p-2 rounded-full hover:bg-gray-100">
+        <div className="calendar-container">
+            <div className="calendar-header">
+                <button onClick={handlePrevMonth} className="nav-button">
                     {chevronLeft}
                 </button>
-                <div className="text-lg font-semibold text-gray-800">
+                <div className="month-title">
                     {monthNames[month]} {year}
                 </div>
-                <button onClick={handleNextMonth} className="p-2 rounded-full hover:bg-gray-100">
+                <button onClick={handleNextMonth} className="nav-button">
                     {chevronRight}
                 </button>
             </div>
-            <div className="grid grid-cols-7 gap-y-1">
+            <div className="calendar-grid">
                 {dayNames.map((d, i) => (
-                    <div key={d} className="text-xs font-bold text-gray-500 text-center py-2 uppercase tracking-wider">
+                    <div key={d} className="day-name">
                         {d}
                     </div>
                 ))}
@@ -118,13 +118,20 @@ export default function CalendarComponent() {
                     // Saturday (5) and Sunday (6) for Monday-first grid
                     const weekDay = date.getDay() === 0 ? 6 : date.getDay() - 1;
                     const isWeekend = weekDay === 5 || weekDay === 6;
+
+                    let dayClass = "calendar-day";
+                    if (isCurrentMonth) {
+                        dayClass += " current-month";
+                        if (isWeekend) dayClass += " weekend";
+                    } else {
+                        dayClass += " other-month";
+                    }
+                    if (isSelected) dayClass += " selected";
+
                     return (
                         <button
                             key={idx}
-                            className={`w-9 h-9 rounded-full mx-auto flex items-center justify-center transition-colors
-                                ${isSelected ? 'bg-red-400 text-white font-bold shadow' : ''}
-                                ${isCurrentMonth ? (isWeekend ? 'text-red-400' : 'text-gray-800') : 'text-gray-300'}
-                                hover:bg-red-100 focus:outline-none`}
+                            className={dayClass}
                             onClick={() => handleDateClick(date)}
                             disabled={!isCurrentMonth}
                         >
@@ -133,6 +140,6 @@ export default function CalendarComponent() {
                     );
                 })}
             </div>
-        </Card>
+        </div>
     );
 }
