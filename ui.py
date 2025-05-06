@@ -95,6 +95,17 @@ async def start():
 
     cl.user_session.set("element", todo_component)
     await cl.Message(content="Todo", elements=[todo_component]).send()
+
+    youtube_component = cl.CustomElement(
+        name="youtubeComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", youtube_component)
+    await cl.Message(content="Youtube", elements=[youtube_component]).send()    
+    
     
 
 
