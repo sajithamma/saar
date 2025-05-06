@@ -33,6 +33,24 @@ async def handle_button_click(action):
     msg = cl.Message(content=f"Button clicked with message: {text}")
     await msg.send()
 
+@cl.action_callback("add_list")
+async def add_list(action):
+    group = action.payload.get("group", {})
+    msg = cl.Message(content=f"List added: {group}")
+    await msg.send()
+
+@cl.action_callback("add_todo")
+async def add_todo(action):
+    todo = action.payload.get("todo", {})
+    msg = cl.Message(content=f"Todo added: {todo}")
+    await msg.send()
+
+@cl.action_callback("toggle_todo")
+async def toggle_todo(action):
+    todo = action.payload.get("todo", {})
+    msg = cl.Message(content=f"Todo toggled: {todo}")
+    await msg.send()
+
 @cl.on_chat_start
 async def start():
 
@@ -67,6 +85,17 @@ async def start():
 
     cl.user_session.set("element", gallery_component)
     await cl.Message(content="Gallery", elements=[gallery_component]).send()
+
+    todo_component = cl.CustomElement(
+        name="todoComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", todo_component)
+    await cl.Message(content="Todo", elements=[todo_component]).send()
+    
 
 
     settings = await cl.ChatSettings(
