@@ -1,14 +1,20 @@
 import chainlit as cl
 from chainlit.input_widget import Select, Switch, Slider
+from agents import Agent, Runner, function_tool
+from dotenv import load_dotenv
+from openai.types.responses import ResponseTextDeltaEvent
+
+
+load_dotenv()
 
 
 commands = [
-    {"id": "Checkin", "icon": "image", "description": "Check In"},
-    {"id": "Checkout", "icon": "globe", "description": "Check Out"},
+    {"id": "Summarize", "icon": "image", "description": "Summarize"},
+    {"id": "Planning", "icon": "globe", "description": "Planning"},
     {
-        "id": "Apply-Leave",
+        "id": "Manage-Tasks",
         "icon": "pen-line",
-        "description": "Apply Leave",
+        "description": "Manage Tasks",
     },
 ]
 
@@ -16,13 +22,13 @@ commands = [
 async def chat_profile():
     return [
         cl.ChatProfile(
-            name="GPT-3.5",
-            markdown_description="The underlying LLM model is **GPT-3.5**.",
+            name="Agentic Layer",
+            markdown_description="Resource Manager Agentic Layer",
             icon="https://picsum.photos/200",
         ),
         cl.ChatProfile(
-            name="GPT-4",
-            markdown_description="The underlying LLM model is **GPT-4**.",
+            name="Report Generation",
+            markdown_description="Report Generation Agent",
             icon="https://picsum.photos/250",
         ),
     ]
@@ -63,50 +69,8 @@ async def start():
         }
     )
 
-    cl.user_session.set("element", hello_world)
-    await cl.Message(content="Please select the PDF files you want to upload", elements=[hello_world]).send()
-
-    calendar_component = cl.CustomElement(
-        name="calendarComponent",
-        props = {
-            "button_text": "I love you"
-        }
-    )
-
-    cl.user_session.set("element", calendar_component)
-    await cl.Message(content="Calendar", elements=[calendar_component]).send()   
-    
-    gallery_component = cl.CustomElement(
-        name="galleryComponent",
-        props = {
-            "button_text": "I love you"
-        }
-    )
-
-    cl.user_session.set("element", gallery_component)
-    await cl.Message(content="Gallery", elements=[gallery_component]).send()
-
-    todo_component = cl.CustomElement(
-        name="todoComponent",
-        props = {
-            "button_text": "I love you"
-        }
-    )
-
-    cl.user_session.set("element", todo_component)
-    await cl.Message(content="Todo", elements=[todo_component]).send()
-
-    youtube_component = cl.CustomElement(
-        name="youtubeComponent",
-        props = {
-            "button_text": "I love you"
-        }
-    )
-
-    cl.user_session.set("element", youtube_component)
-    await cl.Message(content="Youtube", elements=[youtube_component]).send()    
-    
-    
+    # cl.user_session.set("element", hello_world)
+    # await cl.Message(content="Please select the PDF files you want to upload", elements=[hello_world]).send()
 
 
     settings = await cl.ChatSettings(
@@ -166,15 +130,96 @@ async def start():
     ).send()
 
 
+@function_tool
+async def show_gallery_component() -> str:
+    """Show the gallery component"""
+    gallery_component = cl.CustomElement(
+        name="galleryComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", gallery_component)
+    await cl.Message(content="Gallery", elements=[gallery_component]).send()
+
+    return "Gallery component shown"
+
+
+@function_tool
+async def show_calendar_component() -> str:
+    """Show the calendar component"""
+    calendar_component = cl.CustomElement(
+        name="calendarComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", calendar_component)
+    await cl.Message(content="Calendar", elements=[calendar_component]).send()
+
+    return "Calendar component shown"
+
+
+
+@function_tool
+async def show_todo_component() -> str:
+    """Show the todo component"""
+
+    todo_component = cl.CustomElement(
+        name="todoComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", todo_component)
+    await cl.Message(content="Todo", elements=[todo_component]).send()
+
+    return "Todo component shown"
+    
+
+@function_tool
+async def show_youtube_component() -> str:
+    """Show the youtube component"""
+    youtube_component = cl.CustomElement(
+        name="youtubeComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", youtube_component)
+    await cl.Message(content="Youtube", elements=[youtube_component]).send()    
+
+    return "Youtube component shown"
+
+
+agent = Agent(
+    name="UI Agent",
+    instructions="""You are a helpful assistant that can help with tasks and questions.
+    Understand the right ui component based on the need and use tool functions to show the right component
+    You need to call proper tools to trigger the right UI element for the user
+    """,
+    tools=[show_todo_component, show_calendar_component, show_gallery_component, show_youtube_component]
+)
+
 @cl.on_settings_update
 async def setup_agent(settings):
     print("on_settings_update", settings)
 
 @cl.on_message
 async def handle(message: cl.Message):
+
+    global agent
     
-    response = await cl.Message(content=f"Received message: {message.content}").send()
-    
-    element = cl.user_session.get("element")
-    element.props["button_text"] = "Whatsup"
-    await element.update()
+    result = Runner.run_streamed(starting_agent=agent, input=message.content)
+    msg = cl.Message(content="")
+
+    async for event in result.stream_events():
+        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+            await msg.stream_token(event.data.delta)
+
+    await msg.update()
+            
