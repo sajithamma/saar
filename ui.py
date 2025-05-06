@@ -56,7 +56,17 @@ async def start():
     )
 
     cl.user_session.set("element", calendar_component)
-    await cl.Message(content="Calendar", elements=[calendar_component]).send()    
+    await cl.Message(content="Calendar", elements=[calendar_component]).send()   
+    
+    gallery_component = cl.CustomElement(
+        name="galleryComponent",
+        props = {
+            "button_text": "I love you"
+        }
+    )
+
+    cl.user_session.set("element", gallery_component)
+    await cl.Message(content="Gallery", elements=[gallery_component]).send()
 
 
     settings = await cl.ChatSettings(
