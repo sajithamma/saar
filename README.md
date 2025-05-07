@@ -71,11 +71,20 @@ callAction: (action: { name: string, payload: any }) => void;
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies:
+2. Setup a virtual environment:
+   ```bash
+   python3.12 -m venv venv
+   source venv/bin/activate
+   ```
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
+   
+4. Create a `.env` file and add your OpenAI API key:
+   ```bash
+   OPENAI_API_KEY=your-openai-api-key
    ```
-3. Run the application:
+5. Run the application:
    ```bash
    chainlit run ui.py
    ```
