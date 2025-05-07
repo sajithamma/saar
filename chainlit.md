@@ -1,14 +1,11 @@
-# Welcome to Chainlit! 🚀🤖
+# The UI of AI
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+React, Flutter etc. introduced component architecture. These are self-contained containers that can present something and take action. This gave HTML elements a kind of superpower. They could now work independently for a feature, while still managing communication and state across components.
 
-## Useful Links 🔗
+Now imagine, instead of these components being part of a big website, they are delivered as responses from an LLM chat. Like, you ask ChatGPT about tax and it gives you a working financial calculator, not just a message.
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+That’s where the world is going.
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+This is the new UI of AI.
 
-## Welcome screen
-
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+Read the full article at  [Analogarithm](https://analogarithm.com/software-as-a-response-saar-the-ui-of-ai-57933c454c13) 
