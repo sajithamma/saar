@@ -1,6 +1,27 @@
-# Chainlit Custom Components Demo
+# Software As A Response (SAAR)
+
+React, Flutter etc. introduced component architecture. These are self-contained containers that can present something and take action. This gave HTML elements a kind of superpower. They could now work independently for a feature, while still managing communication and state across components.
+
+Now imagine, instead of these components being part of a big website, they are delivered as responses from an LLM chat. Like, you ask ChatGPT about tax and it gives you a working financial calculator, not just a message.
+
+That’s where the world is going.
+
+This is the new UI of AI.
+
+Read the full article at  [Analogarithm](https://analogarithm.com/software-as-a-response-saar-the-ui-of-ai-57933c454c13) 
 
 This project demonstrates the implementation of custom components in Chainlit with various interactive features including callbacks, actions, and dynamic updates.
+
+## Demo
+
+### Calendar Demo
+
+![Calendar Demo](demo1.png)
+
+### Todo List Demo
+
+![Todo List Demo](demo2.png)
+
 
 ## Features
 
@@ -52,25 +73,18 @@ callAction: (action: { name: string, payload: any }) => void;
 1. Clone the repository
 2. Install dependencies:
    ```bash
-   pip install chainlit
+   pip install -r requirements.txt
    ```
 3. Run the application:
    ```bash
-   chainlit run app.py
+   chainlit run ui.py
    ```
 
-## Project Structure
+## How it works
+open [http://localhost:8000](http://localhost:8000)
 
-```
-public/
-  elements/
-    HelloWorld.jsx    # Custom component example
-```
+Ask for, get me the calendar for this month. 
 
-## Contributing
+## Animated Demo
 
-Feel free to submit issues and enhancement requests!
-
-## License
-
-MIT License
+![Animated Demo](UIofAI.gif)
